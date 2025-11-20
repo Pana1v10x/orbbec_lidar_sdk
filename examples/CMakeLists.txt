@@ -1,0 +1,47 @@
+# setting rpath
+if(UNIX)
+    set(CMAKE_BUILD_RPATH "$ORIGIN")
+    set(CMAKE_INSTALL_RPATH "$ORIGIN")
+    # Make sure the rpath is used
+    set(CMAKE_SKIP_BUILD_RPATH FALSE)
+    set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+elseif(WIN32)
+    # Windows doesn't use RPATH but instead uses PATH
+    # DLLs will be copied to the binary directory
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+endif()
+
+add_subdirectory(single_line_quick_start)
+add_subdirectory(discovery_devices)
+add_subdirectory(options)
+if (WIN32)
+    set(Open3D_ROOT_DIR "${CMAKE_SOURCE_DIR}/third_party/open3d/windows")
+    set(Open3D_CMAKE_DIR "${Open3D_ROOT_DIR}/CMake")
+    set(Open3D_DLL "${Open3D_ROOT_DIR}/bin/Open3D.dll")
+else ()
+    set(Open3D_ROOT_DIR "${CMAKE_SOURCE_DIR}/third_party/open3d/linux")
+    set(Open3D_CMAKE_DIR "${Open3D_ROOT_DIR}/lib/cmake")
+    set(Open3D_LIB "${Open3D_ROOT_DIR}/lib/libOpen3D.so")
+endif ()
+
+list(APPEND CMAKE_PREFIX_PATH "${Open3D_CMAKE_DIR}")
+find_package(Open3D REQUIRED)
+
+set(EIGEN_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/third_party/eigen")
+
+include_directories(${Open3D_INCLUDE_DIRS} ${EIGEN_INCLUDE_DIRS})
+add_subdirectory(cloud_viewer)
+add_subdirectory(scan_viewer)
+add_subdirectory(wait_for_frame)
+add_subdirectory(recorder)
+add_subdirectory(playback)
+if (WIN32)
+    install(FILES ${Open3D_LIBRARY} DESTINATION bin)
+    install(FILES ${Open3D_DLL} DESTINATION bin)
+elseif (UNIX)
+    install(FILES ${Open3D_LIBRARY} DESTINATION bin)
+    install(FILES ${Open3D_LIB} DESTINATION bin)
+endif ()
+install(TARGETS ${PROJECT_NAME} DESTINATION bin)
