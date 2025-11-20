@@ -108,6 +108,15 @@ Blow command assume you are in the build directory
     cd install/bin
   ./options/options
   ```
+
+  The options tool can also be used to set the device IP address directly from the command line:
+
+  ```bash
+  cd build
+  ./examples/options/options 192.168.1.120
+  ```
+
+  This will automatically discover the device, connect to it, set the IP address to the specified value, apply the configuration, and reboot the device. The device will use the new IP address after rebooting.
 * **Record and Playback**: Records and plays back data from a device.
 
   ```bash
@@ -116,6 +125,50 @@ Blow command assume you are in the build directory
   # To playback the recorded data
   ./playback point_cloud.mcap
   ```
+
+## Device Configuration
+
+### Setting Device IP Address
+
+There are two ways to configure the device IP address:
+
+1. **Using the options tool (recommended)**: The options tool can set the IP address programmatically:
+
+   ```bash
+   cd build
+   ./examples/options/options 192.168.1.120
+   ```
+
+   This command will:
+   - Discover connected devices on the network
+   - Connect to the first discovered device
+   - Set the IP address to the specified value (e.g., 192.168.1.120)
+   - Apply the configuration
+   - Reboot the device
+
+   After the device reboots, it will use the new IP address.
+
+2. **Using configuration files**: Edit the IP address in the configuration files:
+   - `config/single_device_config.toml` for single device setups
+   - `config/multi_device_config.toml` for multi-device setups
+   - `examples/scan_viewer/ms600_config.toml` for the scan viewer example
+
+   Then use the configuration file when initializing the device in your application.
+
+### Interactive Options Tool
+
+When run without arguments, the options tool provides an interactive interface to get and set various device options:
+
+```bash
+cd build
+./examples/options/options
+```
+
+Available options include:
+- Network settings: IP address, port, MAC address, subnet mask
+- Device information: serial number, firmware version, FPGA version, product model
+- Operation settings: scan frequency, working mode, echo mode, filter level
+- Streaming control: enable/disable streaming
 
 ## API Usage
 
