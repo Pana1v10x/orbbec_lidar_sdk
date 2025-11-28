@@ -9,7 +9,10 @@ This SDK provides a comprehensive library for integrating and utilizing Orbbec L
 3. [Dependencies](https://www.google.com/url?sa=E&source=gmail&q=#dependencies)
 4. [Building the SDK](#building-the-sdk)
 5. [Running Sample Applications](#running-sample-applications)
-6. [Troubleshooting](#troubleshooting)
+6. [Setting Up New LiDAR Devices](#setting-up-new-lidar-devices)
+7. [Device Configuration](#device-configuration)
+8. [API Usage](#api-usage)
+9. [Troubleshooting](#troubleshooting)
 
 ## Prerequisites
 
@@ -88,7 +91,7 @@ sudo apt-get install libopen3d-dev
 ## Running Sample Applications
 
 The following sample applications are available after building the SDK:
-Blow command assume you are in the build directory
+Below commands assume you are in the build directory
 
 * **Scan Viewer**: Demonstrates basic SDK usage.
 
@@ -125,6 +128,164 @@ Blow command assume you are in the build directory
   # To playback the recorded data
   ./playback point_cloud.mcap
   ```
+
+### Environment Setup for Running Examples
+
+Before running the examples, you need to set up the library path environment variable. This is required because the examples need to find the SDK shared library and Open3D libraries.
+
+**Option 1: Set LD_LIBRARY_PATH for current session**
+
+```bash
+cd build
+export LD_LIBRARY_PATH=$PWD:/usr/local/lib/python3.10/dist-packages/open3d:$LD_LIBRARY_PATH
+```
+
+Then run any example:
+```bash
+./examples/scan_viewer/scan_viewer
+./examples/discovery_devices/discovery_devices
+./examples/single_line_quick_start/single_line_quick_start
+```
+
+**Option 2: Add to your shell profile (persistent)**
+
+Add the following to your `~/.bashrc` or `~/.zshrc`:
+
+```bash
+export LD_LIBRARY_PATH=/path/to/orbbec_lidar_sdk/build:/usr/local/lib/python3.10/dist-packages/open3d:$LD_LIBRARY_PATH
+```
+
+**Note**: Replace `/path/to/orbbec_lidar_sdk/build` with the actual path to your build directory.
+
+**Option 3: Run from install directory**
+
+If you've run `make install`, you can run examples from the install directory:
+
+```bash
+cd install/bin
+./scan_viewer
+./discovery_devices
+./options
+```
+
+## Setting Up New LiDAR Devices
+
+This section provides a step-by-step guide for team members setting up new Orbbec LiDAR devices.
+
+### Initial Setup Steps
+
+1. **Physical Connection**
+   - Connect the LiDAR device to your network via Ethernet
+   - Ensure the device is powered on
+   - Verify network connectivity (device should be on the same network as your development machine)
+
+2. **Discover the Device**
+   
+   First, discover connected devices on your network:
+   
+   ```bash
+   cd build
+   export LD_LIBRARY_PATH=$PWD:/usr/local/lib/python3.10/dist-packages/open3d:$LD_LIBRARY_PATH
+   ./examples/discovery_devices/discovery_devices
+   ```
+   
+   The tool will automatically discover devices and print their IP addresses and ports. Press 'q' + Enter to exit.
+
+3. **Verify Device Connection**
+   
+   Use the quick start example to verify the device is working:
+   
+   ```bash
+   ./examples/single_line_quick_start/single_line_quick_start
+   ```
+   
+   This will:
+   - Automatically discover and connect to devices
+   - Start receiving point cloud data
+   - Print the first 10 points from each scan
+   - Press Ctrl+C to exit
+
+4. **Configure Device IP Address (if needed)**
+   
+   If you need to set a specific IP address for the device:
+   
+   ```bash
+   ./examples/options/options 192.168.1.120
+   ```
+   
+   This will:
+   - Discover the device
+   - Connect to it
+   - Set the IP address to the specified value
+   - Apply the configuration
+   - Reboot the device
+   
+   **Important**: After rebooting, the device will use the new IP address. You may need to update your application configuration to use the new IP.
+
+5. **Test Visualization**
+   
+   For visualization examples (scan_viewer, cloud_viewer), you may need to update the IP address in the source code or use a configuration file:
+   
+   - Edit `examples/scan_viewer/scan_viewer.cpp` and update the IP address (default: 192.168.1.100)
+   - Or use the configuration file: `examples/scan_viewer/ms600_config.toml`
+   
+   Then run:
+   ```bash
+   ./examples/scan_viewer/scan_viewer
+   ```
+
+### Available Examples
+
+All examples are located in `build/examples/`:
+
+- **discovery_devices**: Discovers and lists all connected LiDAR devices
+- **single_line_quick_start**: Quick start example that receives and prints point cloud data
+- **options**: Interactive tool to get/set device options (IP, port, scan frequency, etc.)
+- **scan_viewer**: Open3D-based visualization of LiDAR scans (requires Open3D)
+- **cloud_viewer**: Point cloud visualization (requires Open3D)
+- **recorder**: Records LiDAR data to MCAP format
+- **playback**: Plays back recorded MCAP files
+- **wait_for_frame**: Waits for and processes frames from the device
+
+### Common Device Information
+
+When a device is discovered, you'll see information like:
+- **IP Address**: e.g., `192.168.1.200`
+- **Port**: Typically `2228` for UDP or TCP
+- **Serial Number**: Device serial number
+- **Firmware Version**: e.g., `V2.2.4.5`
+- **Product Model**: e.g., `SL450`
+
+### Troubleshooting Device Connection
+
+If you're having trouble connecting to a device:
+
+1. **Check Network Connectivity**
+   ```bash
+   ping <device_ip>
+   ```
+
+2. **Verify Device is Discoverable**
+   ```bash
+   ./examples/discovery_devices/discovery_devices
+   ```
+   If the device doesn't appear, check:
+   - Device is powered on
+   - Device is on the same network subnet
+   - Firewall isn't blocking multicast traffic
+   - Network interface is properly configured
+
+3. **Check Library Path**
+   Ensure `LD_LIBRARY_PATH` is set correctly:
+   ```bash
+   echo $LD_LIBRARY_PATH
+   ```
+
+4. **Verify Open3D Libraries**
+   For visualization examples, ensure Open3D libraries are accessible:
+   ```bash
+   ls /usr/local/lib/python3.10/dist-packages/open3d/libc++.so.1
+   ```
 
 ## Device Configuration
 
