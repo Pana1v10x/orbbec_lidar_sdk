@@ -1,8 +1,0 @@
-orbbec-lidar-sdk (1.0.4-1) unstable; urgency=medium
-
-  * Initial Debian package release
-  * Package version 1.0.4 of Orbbec LiDAR SDK
-
- -- Orbbec <support@orbbec.com>  Wed, 20 Nov 2025 12:00:00 +0000
-
-
