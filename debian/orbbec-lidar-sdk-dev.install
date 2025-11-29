@@ -1,0 +1,6 @@
+usr/include/orbbec_lidar/
+usr/lib/cmake/orbbec_lidar_sdk/
+usr/lib/*/cmake/orbbec_lidar_sdk/
+usr/lib/liborbbec_lidar_sdk.so
+
+

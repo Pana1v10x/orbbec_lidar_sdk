@@ -1,0 +1,4 @@
+usr/lib/liborbbec_lidar_sdk.so.*
+usr/lib/*/liborbbec_lidar_sdk.so.*
+
+

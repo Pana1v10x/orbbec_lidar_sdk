@@ -1,0 +1,13 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: orbbec-lidar-sdk
+Source: https://github.com/orbbec/orbbec_lidar_sdk
+
+Files: *
+Copyright: Copyright (c) Orbbec
+License: See LICENSE file in upstream repository
+
+License: Proprietary
+ This software is proprietary software. Please refer to the LICENSE file
+ in the upstream repository for license terms and conditions.
+
+
