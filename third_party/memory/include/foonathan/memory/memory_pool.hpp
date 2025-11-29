@@ -222,11 +222,6 @@ namespace foonathan
                 return arena_.get_allocator();
             }
 
-             /// \returns If `ptr` is in memory owned by the underlying arena.
-             bool owns(const void* ptr) const noexcept
-             {
-		return arena_.owns(ptr);
-             }
         private:
             allocator_info info() const noexcept
             {

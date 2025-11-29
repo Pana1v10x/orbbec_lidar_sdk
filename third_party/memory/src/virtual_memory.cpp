@@ -230,7 +230,7 @@ void virtual_block_allocator::deallocate_block(memory_block block) noexcept
                                 { return static_cast<char*>(block.memory) == cur_ - block_size_; },
                                 info(), block.memory);
     cur_ -= block_size_;
-    virtual_memory_decommit(cur_, block_size_ / virtual_memory_page_size);
+    virtual_memory_decommit(cur_, block_size_);
 }
 
 allocator_info virtual_block_allocator::info() noexcept
